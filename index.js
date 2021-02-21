@@ -96,7 +96,7 @@ function engineerQs(baseAnswers){
             if (answers.answerAddAnother === true){
                 employeeQs()
             } else {
-                buildTeam();
+                createTeam();
                 console.log("rendered!!!")
             }     
          })
@@ -124,7 +124,7 @@ function engineerQs(baseAnswers){
                     if (answers.answerAddAnother === true){
                         employeeQs()
                     } else {
-                        buildTeam();
+                        createTeam();
                         console.log("rendered!!!")
                     }     
                  })
@@ -148,21 +148,22 @@ function engineerQs(baseAnswers){
                     ]) .then(function(answers){
                         const newManager = new Manager(baseAnswers.answerName, 
                             baseAnswers.answerID, baseAnswers.answerEmail, baseAnswers.answersOfficeNumber);
-                            teamArr.push(newEngineer);
+                            teamArr.push(newManager);
                             if (answers.answerAddAnother === true){
                                 employeeQs()
                             } else {
-                                buildTeam();
+                                createTeam();
                                 console.log("rendered!!!")
                             }     
                          })
                         }
 
-                        function buildTeam(){
-                            if (fs.existsSync(OUTPUT_DIR)){
+                        function createTeam(){
+                            if (!fs.existsSync(OUTPUT_DIR)){
                                 fs.mkdirSync(OUTPUT_DIR)
                             }
-                            fs.writeFileSync(outputPath, render(teamARR), "utf-8");
+                            
+                            fs.writeFileSync(outputPath, render(teamArr), "utf-8");
 
                         }
                     }

@@ -1,9 +1,11 @@
 // create the team on the front end side
-const Engineer = require("../lib/Engineer");
-const Intern = require("../lib/Intern");
-const Manager = require("../lib/Manager");
+// const Engineer = require("../lib/Engineer");
+// const Intern = require("../lib/Intern");
+// const Manager = require("../lib/Manager");
 
 const createTeam = (team) => {
+  console.log(team);
+
   
   const createEngineer = (engineer) => {
     return `
@@ -22,18 +24,20 @@ const createTeam = (team) => {
  </div> 
     `
   };
-  createEngineer();
+
+  
   
   const html = [];
 
   html.push(
     team
       .filter((employee) => employee.getRole() === "Engineer")
-      .map((engineer) => generateEngineer(engineer))
+      .map((engineer) => createEngineer(engineer))
+      .join("")
   )
 
-  return html.join(" ");
-}
+  
+
 
 
 const createIntern = (intern) => {
@@ -51,22 +55,23 @@ const createIntern = (intern) => {
 </ul>
 </div>
 </div> 
-  `
+  `;
 };
 
-createIntern();
 
 
 
-//const html = [];
+
+// const html = [];
 
 html.push(
   team
     .filter((employee) => employee.getRole() === "Intern")
-    .map((intern) => generateIntern(intern))
+    .map((intern) => createIntern(intern))
+    .join(" ")
 )
 
-return html.join(" ");
+
 
 
 
@@ -85,21 +90,23 @@ const createManager = (manager) => {
 </ul>
 </div>
 </div> 
-  `
+  `;
 };
 
-createManager();
 
 
-//const html = [];
+
+
+// const html = [];
 
 html.push(
   team
     .filter((employee) => employee.getRole() === "Manager")
-    .map((manager) => generateMangager(manager))
-);
+    .map((manager) => createManager(manager))
+    .join("")
+)
+}
 
-return html.join(" ");
 
 module.exports = (team) => {
   return `
@@ -109,7 +116,7 @@ module.exports = (team) => {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Members</title>
+    <title>Team Members</title>no
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
     integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
     <link rel ="stylesheet" href = "style.css">
@@ -128,8 +135,43 @@ ${createTeam(team)}
     </main>
 </body>
 </html>
-  `;
+  // `
 };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 // console.log("team array", teamArr);
 // let card = "";
