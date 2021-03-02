@@ -1,4 +1,3 @@
-
 const Intern = require("./lib/Intern");
 const Manager = require("./lib/Manager");
 const inquirer = require("inquirer");
@@ -9,170 +8,186 @@ const path = require("path");
 const OUTPUT_DIR = path.resolve(__dirname, "output");
 const outputPath = path.join(OUTPUT_DIR, "team.html");
 const render = require("./src/page-template.js");
-
+//global variables
+let objectEmployee=[];
 
 const employeeQs = () => {
-  return inquirer
-    .prompt([
-      {
-        type: "input",
-        name: "name",
-        message: "What is your name? (Required)",
-        validate: (nameInput) => {
-          if (nameInput) {
-            return true;
-          } else {
-            console.log("Please enter your name!");
-            return false;
-          }
-        },
-      },
-
-      {
-        type: "input",
-        name: "email",
-        message: "What is your email? (Required)",
-        validate: (emailInput) => {
-          if (emailInput) {
-            return true;
-          } else {
-            console.log("Please enter your email!");
-            return false;
-          }
-        },
-      },
-
-      {
-        type: "input",
-        name: "id",
-        message: "What is your ID? (Required)",
-        validate: (idInput) => {
-          if (idInput) {
-            return true;
-          } else {
-            console.log("Please enter your ID!");
-            return false;
-          }
-        },
-      },
-
-      {
-        name: "role",
-        type: "list",
-        message: "What is your Role? (Required)",
-        choices: [ "Intern", "Manager", "Engineer"],
-      },
-    ])
-
-.then(function(answers){
-    if (answers.answerRole === "Engineer"){
-        engineerQs(answers);
-    } else if (answers.answerRole === "Intern"){
-        internQs(answers);
-    } else {
-        managerQs(answers);
-    }
-})
-
-function engineerQs(baseAnswers){
-    inquirer.prompt ([
+  return (
+    inquirer
+      .prompt([
         {
-            type:"input",
-            message: "Enter your GitHub username.",
-            name:"answersGithub",
-        },
-        {
-            type:"confirm",
-            message: "Add another?",
-            name:"answerAddAnother",
-
-    },
-
-
-    ]) .then(function(answers){
-        const newEngineer = new Engineer(baseAnswers.answerName, 
-            baseAnswers.answerID, baseAnswers.answerEmail, baseAnswers.answersGithub);
-            teamArr.push(newEngineer);
-            if (answers.answerAddAnother === true){
-                employeeQs()
+          type: "input",
+          name: "name",
+          message: "What is your name? (Required)",
+          validate: (nameInput) => {
+            if (nameInput) {
+              return true;
             } else {
-                createTeam();
-                console.log("rendered!!!")
-            }     
-         })
+              console.log("Please enter your name!");
+              return false;
+            }
+          },
+        },
+
+        {
+          type: "input",
+          name: "email",
+          message: "What is your email? (Required)",
+          validate: (emailInput) => {
+            if (emailInput) {
+              return true;
+            } else {
+              console.log("Please enter your email!");
+              return false;
+            }
+          },
+        },
+
+        {
+          type: "input",
+          name: "id",
+          message: "What is your ID? (Required)",
+          validate: (idInput) => {
+            if (idInput) {
+              return true;
+            } else {
+              console.log("Please enter your ID!");
+              return false;
+            }
+          },
+        },
+
+        {
+          name: "role",
+          type: "list",
+          message: "What is your Role? (Required)",
+          choices: ["Engineer", "Intern", "Manager" ],
+        },
+        
+      ])
+
+      .then(function (answers) {
+        //console.log(answers);
+        objectEmployee.push(answers); //have to get the data from this .then statement -answers..did that by pushing to global var objectEmployee
+        //console.log(`line 72 objEmployee ${objectEmployee}`)
+        if (answers.role === "Engineer") {
+          
+          engineerQs(answers);
+        } else if (answers.role === "Intern") {
+          internQs(answers);
+        } else {
+          managerQs(answers);
         }
+      })
+      
+  );
+  
+//follow the data
+  function engineerQs() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Enter your GitHub username.",
+          name: "engineerGithub",
+        },
+        {
+          type: "confirm",
+          message: "Add another?",
+          name: "answerAddAnother",
+        },
+      ])
+      .then(function (answers) {
+        //assigned data from objectEmployee and the newer github answers to the Eng constructor
+        const newEngineer = new Engineer(
+          objectEmployee[0].name,
+          objectEmployee[0].id,
+          objectEmployee[0].email,
+          answers.engineerGithub
+        );
+        teamArr.push(newEngineer);
+        objectEmployee=[];
+        if (answers.answerAddAnother === true) {
+          employeeQs();
+        } else {
+          createTeam();
+          console.log("rendered!!!");
+        }
+      })
+  }
 
-        function internQs(baseAnswers){
-            inquirer.prompt ([
-                {
-                    type:"input",
-                    message: "Enter your school name.",
-                    name:"answersSchool",
-                },
-                {
-                    type:"confirm",
-                    message: "Add another?",
-                    name:"answerAddAnother",
-        
-            },
-        
-        
-            ]) .then(function(answers){
-                const newIntern = new Intern(baseAnswers.answerName, 
-                    baseAnswers.answerID, baseAnswers.answerEmail, baseAnswers.answersSchool);
-                    teamArr.push(newIntern);
-                    if (answers.answerAddAnother === true){
-                        employeeQs()
-                    } else {
-                        createTeam();
-                        console.log("rendered!!!")
-                    }     
-                 })
-                }
+  function internQs() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Enter your school name.",
+          name: "internSchool",
+        },
+        {
+          type: "confirm",
+          message: "Add another?",
+          name: "answerAddAnother",
+        },
+      ])
+      .then(function (answers) {
+        const newIntern = new Intern(
+          objectEmployee[0].name,
+          objectEmployee[0].id,
+          objectEmployee[0].email,
+          answers.internSchool
+        );
+        teamArr.push(newIntern);
+        if (answers.answerAddAnother === true) {
+          employeeQs();
+        } else {
+          createTeam();
+          console.log("rendered!!!");
+        }
+      });
+  }
 
-                function managerQs(baseAnswers){
-                    inquirer.prompt ([
-                        {
-                            type:"input",
-                            message: "Enter your office phone?.",
-                            name:"answersOfficeNumber",
-                        },
-                        {
-                            type:"confirm",
-                            message: "Add another?",
-                            name:"answerAddAnother",
-                
-                    },
-                
-                
-                    ]) .then(function(answers){
-                        const newManager = new Manager(baseAnswers.answerName, 
-                            baseAnswers.answerID, baseAnswers.answerEmail, baseAnswers.answersOfficeNumber);
-                            teamArr.push(newManager);
-                            if (answers.answerAddAnother === true){
-                                employeeQs()
-                            } else {
-                                createTeam();
-                                console.log("rendered!!!")
-                            }     
-                         })
-                        }
+  function managerQs() {
+    inquirer
+      .prompt([
+        {
+          type: "input",
+          message: "Enter your office phone?",
+          name: "managerPhone",
+        },
+        {
+          type: "confirm",
+          message: "Add another?",
+          name: "answerAddAnother",
+        },
+      ])
+      .then(function (answers) {
+        const newManager = new Manager(
+          objectEmployee[0].name,
+          objectEmployee[0].id,
+          objectEmployee[0].email,
+          answers.managerPhone
+        );
+        teamArr.push(newManager);
+        if (answers.answerAddAnother === true) {
+          employeeQs();
+        } else {
+          createTeam();
+          console.log("rendered!!!");
+        }
+      });
+  }
 
-                        function createTeam(){
-                            if (!fs.existsSync(OUTPUT_DIR)){
-                                fs.mkdirSync(OUTPUT_DIR)
-                            }
-                            
-                            fs.writeFileSync(outputPath, render(teamArr), "utf-8");
+  function createTeam() {
+    if (!fs.existsSync(OUTPUT_DIR)) {
+      fs.mkdirSync(OUTPUT_DIR);
+    }
 
-                        }
-                    }
+    fs.writeFileSync(outputPath, render(teamArr), "utf-8");
+  }
+};
 
-                        employeeQs();
-
-
-
-
+employeeQs();
 
 //     .then((answers) => {
 //       console.log(answers.role);
@@ -208,16 +223,6 @@ function engineerQs(baseAnswers){
 // };
 
 // employeeQ();
-
-
-
-
-
-
-
-
-
-
 
 // if (time < 10) {
 //     greeting = "Good morning";
